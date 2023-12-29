@@ -1,0 +1,3 @@
+cd C:\Users\Jenson\source\repos\LC-RecentlyPlayedWith
+copy ".\RecentlyPlayedWith\bin\Debug\.netframework,version=v4.8\RecentlyPlayedWith.dll" ".\Output\RecentlyPlayedWith.dll" /Y
+copy ".\RecentlyPlayedWith\bin\Debug\.netframework,version=v4.8\RecentlyPlayedWith.dll" "C:\Users\Jenson\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\Dev1A3-RecentlyPlayedWith\RecentlyPlayedWith.dll" /Y
