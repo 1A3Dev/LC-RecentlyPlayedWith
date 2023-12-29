@@ -37,7 +37,7 @@ internal class PluginLoader : BaseUnityPlugin
 
     public void BindConfig<T>(ref ConfigEntry<T> config, string section, string key, T defaultValue, string description = "")
     {
-        config = ((BaseUnityPlugin)this).Config.Bind<T>(section, key, defaultValue, description);
+        config = Config.Bind<T>(section, key, defaultValue, description);
     }
 }
 internal class PlayedWithConfig
@@ -73,7 +73,6 @@ internal static class SetPlayedWith_Patch
     [HarmonyPostfix]
     private static void openingDoorsSequence(ref StartOfRound __instance)
     {
-        PlayedWithConfig.logSource.LogInfo("openingDoorsSequence");
         foreach (PlayerControllerB plyCon in __instance.allPlayerScripts)
         {
             if (plyCon.isPlayerControlled)
