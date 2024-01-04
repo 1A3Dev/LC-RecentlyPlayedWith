@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
@@ -55,13 +56,23 @@ namespace LobbyInviteOnly
         }
 
         internal static HashSet<ulong> PlayerList = new HashSet<ulong>();
-        internal static void SetPlayedWith(ulong playerSteamId, string debugType)
+        internal static bool CanSetPlayedWith(ulong playerSteamId)
         {
-            if (!PlayerList.Contains(playerSteamId) && playerSteamId != 0f && playerSteamId != StartOfRound.Instance.localPlayerController.playerSteamId)
-            {
-                PlayerList.Add(playerSteamId);
-                SteamFriends.SetPlayedWith(playerSteamId);
-                logSource.LogInfo($"Set recently played with {playerSteamId} ({debugType})");
+            return !PlayerList.Contains(playerSteamId) && playerSteamId != 0f && playerSteamId != StartOfRound.Instance.localPlayerController.playerSteamId;
+        }
+        internal static void SetPlayedWith(ulong[] playerSteamIds, string debugType)
+        {
+            if (playerSteamIds.Length > 0) {
+                foreach (ulong playerSteamId in playerSteamIds)
+                {
+                    if (CanSetPlayedWith(playerSteamId))
+                    {
+                        PlayerList.Add(playerSteamId);
+                        SteamFriends.SetPlayedWith(playerSteamId);
+                    }
+                }
+                logSource.LogInfo($"Set recently played with ({debugType}) for {playerSteamIds.Length} players.");
+                logSource.LogDebug($"Set recently played with ({debugType}): {string.Join(", ", playerSteamIds)}");
             }
         }
     }
@@ -73,13 +84,7 @@ namespace LobbyInviteOnly
         [HarmonyPostfix]
         private static void openingDoorsSequence(ref StartOfRound __instance)
         {
-            foreach (PlayerControllerB plyCon in __instance.allPlayerScripts)
-            {
-                if (plyCon.isPlayerControlled)
-                {
-                    PlayedWithConfig.SetPlayedWith(plyCon.playerSteamId, "shipLanded");
-                }
-            }
+            PlayedWithConfig.SetPlayedWith(__instance.allPlayerScripts.Where(x => x.isPlayerControlled && PlayedWithConfig.CanSetPlayedWith(x.playerSteamId)).Select(x => x.playerSteamId).ToArray(), "shipLanded");
         }
 
         [HarmonyPatch(typeof(PlayerControllerB), "SendNewPlayerValuesClientRpc")]
@@ -100,10 +105,7 @@ namespace LobbyInviteOnly
                     }
                 }
 
-                foreach (ulong steamId in playerSteamIds)
-                {
-                    PlayedWithConfig.SetPlayedWith(steamId, debugType);
-                }
+                PlayedWithConfig.SetPlayedWith(playerSteamIds.Where(x => PlayedWithConfig.CanSetPlayedWith(x)).ToArray(), debugType);
             }
         }
     }

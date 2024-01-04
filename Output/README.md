@@ -10,6 +10,10 @@ Note: By default people are only added when the ship lands on a planet (to preve
 
 ## Changelog
 
+### 1.0.1
+
+- Made steam ids be bulk logged rather than one log per steam id.
+
 ### 1.0.0
 
 - Initial Release
