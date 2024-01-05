@@ -1,6 +1,6 @@
 {
   "name": "RecentlyPlayedWith",
-  "version_number": "1.0.1",
+  "version_number": "1.0.2",
   "website_url": "https://github.com/1A3Dev/LC-RecentlyPlayedWith",
   "description": "Makes players show up on the steam \"recently played with\" list.",
   "dependencies": ["BepInEx-BepInExPack-5.4.2100"]
