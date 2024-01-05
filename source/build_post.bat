@@ -1,0 +1,3 @@
+copy ".\bin\Release\netstandard2.1\RecentlyPlayedWith.dll" "..\thunderstore\RecentlyPlayedWith.dll" /Y
+copy ".\bin\Release\netstandard2.1\RecentlyPlayedWith.dll" "C:\Users\Jenson\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\Dev1A3-RecentlyPlayedWith\RecentlyPlayedWith.dll" /Y
+copy ".\bin\Release\netstandard2.1\RecentlyPlayedWith.pdb" "C:\Users\Jenson\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\Dev1A3-RecentlyPlayedWith\RecentlyPlayedWith.pdb" /Y

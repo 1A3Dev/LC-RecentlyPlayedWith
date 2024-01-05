@@ -49,11 +49,11 @@
     <!-- make all references non-private, so they won't be copied to the output folder -->
     <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
         <ItemGroup>
-        <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+          <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
         </ItemGroup>
     </Target>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="call &quot;C:\Users\Jenson\source\repos\LC-RecentlyPlayedWith\build_post.bat&quot;" />
+      <Exec Command="call build_post.bat" />
     </Target>
 </Project>

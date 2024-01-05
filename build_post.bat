@@ -1,4 +1,0 @@
-cd C:\Users\Jenson\source\repos\LC-RecentlyPlayedWith
-copy ".\RecentlyPlayedWith\bin\Release\netstandard2.1\RecentlyPlayedWith.dll" ".\Output\RecentlyPlayedWith.dll" /Y
-copy ".\RecentlyPlayedWith\bin\Release\netstandard2.1\RecentlyPlayedWith.dll" "C:\Users\Jenson\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\Dev1A3-RecentlyPlayedWith\RecentlyPlayedWith.dll" /Y
-copy ".\RecentlyPlayedWith\bin\Release\netstandard2.1\RecentlyPlayedWith.pdb" "C:\Users\Jenson\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\Default\BepInEx\plugins\Dev1A3-RecentlyPlayedWith\RecentlyPlayedWith.pdb" /Y
