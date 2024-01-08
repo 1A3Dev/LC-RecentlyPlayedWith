@@ -14,6 +14,7 @@ This mod enables the steam "recently played with" integration which allows you t
 ### Compatibility
 
 - Supported Game Versions:
+  - v47
   - v45
 - Works Well With:
   - N/A
