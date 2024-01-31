@@ -12,7 +12,7 @@ This mod enables the steam "recently played with" integration which allows you t
 ### Compatibility
 
 - Supported Game Versions:
-  - v47
+  - v47 - v49
   - v45
 - Works Well With:
   - N/A
@@ -23,7 +23,7 @@ This mod enables the steam "recently played with" integration which allows you t
 
 The mod has some configuration options including:
 
-- Toggle for whether people should only be added whilst the ship is landed.
+- Toggle for whether people should be added to the list whilst the ship is in orbit.
 
 ### Credits
 

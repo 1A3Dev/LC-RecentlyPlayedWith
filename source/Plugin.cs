@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
@@ -8,7 +9,7 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Steamworks;
 
-namespace LobbyInviteOnly
+namespace RecentlyPlayedWith
 {
     [BepInPlugin(modGUID, "RecentlyPlayedWith", modVersion)]
     internal class PluginLoader : BaseUnityPlugin
@@ -43,8 +44,6 @@ namespace LobbyInviteOnly
     }
     internal class PlayedWithConfig
     {
-        internal static SteamId LobbyId;
-
         internal static ManualLogSource logSource;
 
         internal static ConfigEntry<bool> IncludeOrbit;
@@ -52,24 +51,19 @@ namespace LobbyInviteOnly
         {
             logSource = Logger.CreateLogSource(PluginLoader.modGUID);
 
-            PluginLoader.Instance.BindConfig(ref IncludeOrbit, "Settings", "Enable In Orbit", false, "Should players be classed as recently played with whilst you are in orbit? Disabling this will only add people whilst the ship is landed.");
+            PluginLoader.Instance.BindConfig(ref IncludeOrbit, "Settings", "Enable In Orbit", true, "Should players be classed as recently played with whilst you are in orbit? Disabling this will only add people whilst the ship is landed.");
         }
 
         internal static HashSet<ulong> PlayerList = new HashSet<ulong>();
-        internal static bool CanSetPlayedWith(ulong playerSteamId)
-        {
-            return !PlayerList.Contains(playerSteamId) && playerSteamId != 0f && playerSteamId != StartOfRound.Instance.localPlayerController.playerSteamId;
-        }
         internal static void SetPlayedWith(ulong[] playerSteamIds, string debugType)
         {
+            playerSteamIds = playerSteamIds.Where(x => x != 0f && x != SteamClient.SteamId && (debugType == "generateLevel" || !PlayerList.Contains(x))).ToArray();
             if (playerSteamIds.Length > 0) {
                 foreach (ulong playerSteamId in playerSteamIds)
                 {
-                    if (CanSetPlayedWith(playerSteamId))
-                    {
+                    if (!PlayerList.Contains(playerSteamId))
                         PlayerList.Add(playerSteamId);
-                        SteamFriends.SetPlayedWith(playerSteamId);
-                    }
+                    SteamFriends.SetPlayedWith(playerSteamId);
                 }
                 logSource.LogInfo($"Set recently played with ({debugType}) for {playerSteamIds.Length} players.");
                 logSource.LogDebug($"Set recently played with ({debugType}): {string.Join(", ", playerSteamIds)}");
@@ -80,32 +74,50 @@ namespace LobbyInviteOnly
     [HarmonyPatch]
     internal static class SetPlayedWith_Patch
     {
-        [HarmonyPatch(typeof(StartOfRound), "openingDoorsSequence")]
+        internal static bool initialJoin = true;
+
+        [HarmonyPatch(typeof(RoundManager), "GenerateNewLevelClientRpc")]
         [HarmonyPostfix]
-        private static void openingDoorsSequence(ref StartOfRound __instance)
+        private static void GenerateNewLevelClientRpc(ref RoundManager __instance)
         {
-            PlayedWithConfig.SetPlayedWith(__instance.allPlayerScripts.Where(x => x.isPlayerControlled && PlayedWithConfig.CanSetPlayedWith(x.playerSteamId)).Select(x => x.playerSteamId).ToArray(), "shipLanded");
+            PlayedWithConfig.SetPlayedWith(__instance.playersManager.allPlayerScripts.Where(x => x.isPlayerControlled || x.isPlayerDead).Select(x => x.playerSteamId).ToArray(), "generateLevel");
         }
 
         [HarmonyPatch(typeof(PlayerControllerB), "SendNewPlayerValuesClientRpc")]
         [HarmonyPostfix]
         private static void StartClient(ref ulong[] playerSteamIds)
         {
-            if (StartOfRound.Instance != null && (StartOfRound.Instance.shipHasLanded || (StartOfRound.Instance.inShipPhase && PlayedWithConfig.IncludeOrbit.Value)))
+            if (StartOfRound.Instance != null && (!StartOfRound.Instance.inShipPhase || PlayedWithConfig.IncludeOrbit.Value))
             {
                 string debugType = "otherJoined";
-                if (GameNetworkManager.Instance.currentLobby.HasValue && GameNetworkManager.Instance.currentLobby.Value.Id != PlayedWithConfig.LobbyId)
+                if (initialJoin)
                 {
-                    PlayedWithConfig.LobbyId = GameNetworkManager.Instance.currentLobby.Value.Id;
+                    initialJoin = false;
                     debugType = "selfJoined";
-                    if (PlayedWithConfig.PlayerList.Count > 0)
-                    {
-                        PlayedWithConfig.PlayerList.Clear();
-                        PlayedWithConfig.logSource.LogInfo($"Cleared recently played with...");
-                    }
                 }
 
-                PlayedWithConfig.SetPlayedWith(playerSteamIds.Where(x => PlayedWithConfig.CanSetPlayedWith(x)).ToArray(), debugType);
+                PlayedWithConfig.SetPlayedWith(playerSteamIds.ToArray(), debugType);
+            }
+        }
+
+        [HarmonyPatch(typeof(StartOfRound), "OnPlayerDC")]
+        [HarmonyPostfix]
+        private static void OnPlayerDC(ref StartOfRound __instance, ref int playerObjectNumber, ulong clientId)
+        {
+            ulong steamId = __instance.allPlayerScripts[playerObjectNumber].playerSteamId;
+            PlayedWithConfig.PlayerList.Remove(steamId);
+            PlayedWithConfig.logSource.LogInfo($"Removing {steamId} from recently played with.");
+        }
+
+        [HarmonyPatch(typeof(StartOfRound), "OnDestroy")]
+        [HarmonyPostfix]
+        private static void SORDestroy(ref StartOfRound __instance)
+        {
+            initialJoin = true;
+            if (PlayedWithConfig.PlayerList.Count > 0)
+            {
+                PlayedWithConfig.PlayerList.Clear();
+                PlayedWithConfig.logSource.LogInfo($"Cleared recently played with (OnDestroy)");
             }
         }
     }
