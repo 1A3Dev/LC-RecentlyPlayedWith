@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/" />
-        <ThunderstoreBuildCopyPath Include="$(TargetDir)/$(TargetName).pdb" Destination="BepInEx/plugins/$(ProjectName)/" />
+        <ThunderstoreBuildCopyPath Include="$(TargetDir)/$(TargetName).pdb" Condition="$(Configuration) != 'Release'" Destination="BepInEx/plugins/$(ProjectName)/" />
     </ItemGroup>
 
     <ItemGroup>
