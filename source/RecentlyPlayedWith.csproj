@@ -7,6 +7,19 @@
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <IsThunderstorePackable>true</IsThunderstorePackable>
+        <ThunderstoreName>RecentlyPlayedWith</ThunderstoreName>
+        <ThunderstoreDescription>Makes players show up on the Steam "recently played with" list.'</ThunderstoreDescription>
+        <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
+        <HasBepInPlugin>true</HasBepInPlugin>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ThunderstoreBuildCopyPath Include="$(TargetPath)" Destination="BepInEx/plugins/$(ProjectName)/" />
+        <ThunderstoreBuildCopyPath Include="$(TargetDir)/$(TargetName).pdb" Destination="BepInEx/plugins/$(ProjectName)/" />
+    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
         <PackageReference Include="BepInEx.Core" Version="5.*" />
