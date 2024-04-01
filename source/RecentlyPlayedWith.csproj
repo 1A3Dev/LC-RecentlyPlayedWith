@@ -10,7 +10,7 @@
     <PropertyGroup>
         <IsThunderstorePackable>true</IsThunderstorePackable>
         <ThunderstoreName>RecentlyPlayedWith</ThunderstoreName>
-        <ThunderstoreDescription>Makes players show up on the Steam "recently played with" list.'</ThunderstoreDescription>
+        <ThunderstoreDescription>Makes players show up on the Steam \"recently played with\" list.</ThunderstoreDescription>
         <ThunderstoreIconPath>$(ProjectDir)assets/icons/icon.png</ThunderstoreIconPath>
         <HasBepInPlugin>true</HasBepInPlugin>
     </PropertyGroup>
