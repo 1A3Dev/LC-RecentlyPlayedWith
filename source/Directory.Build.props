@@ -53,5 +53,5 @@
     </PropertyGroup>
 
     <!-- Import local user props -->
-    <Import Project="$(SolutionDir)CSync.props.user" Condition="$(CI) != 'true'"/>
+    <Import Project="$(SolutionDir)RecentlyPlayedWith.props.user" Condition="$(CI) != 'true'"/>
 </Project>
