@@ -45,6 +45,10 @@
         <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/UnityEngine.UI.dll</HintPath>
       </Reference>
     </ItemGroup>
+    
+    <ItemGroup Condition="$(CI) == 'true'">
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="50.0.0-beta.0-ngd.2" />
+    </ItemGroup>
 
     <!-- make all references non-private, so they won't be copied to the output folder -->
     <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
