@@ -50,13 +50,6 @@
         <PackageReference Include="LethalCompany.GameLibs.Steam" Version="50.0.0-beta.0-ngd.2" />
     </ItemGroup>
 
-    <!-- make all references non-private, so they won't be copied to the output folder -->
-    <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
-        <ItemGroup>
-          <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
-        </ItemGroup>
-    </Target>
-
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
       <Exec Command="call build_post.bat" />
     </Target>
