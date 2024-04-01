@@ -44,7 +44,6 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <SetThunderstorePackageVersionTargetName Include="SetThunderstorePackageVersion" />
-        <PreThunderstorePackTargetName Include="NetcodePatch" />
     </ItemGroup>
 
     <!-- Release optimisations -->
