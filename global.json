@@ -1,5 +1,5 @@
 {
   "msbuild-sdks": {
-    "Sigurd.Thunderstore.Sdk": "0.2.5"
+    "Sigurd.Thunderstore.Sdk": "0.3.2"
   }
 }
