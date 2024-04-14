@@ -1,3 +1,7 @@
+### 1.0.4
+
+- Updated README.md to mention v50 support.
+
 ### 1.0.3
 
 - Made players be force added to the list when the lever to land is pulled.
